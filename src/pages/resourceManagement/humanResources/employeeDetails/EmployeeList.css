@@ -1,0 +1,9 @@
+.employeeListWrapper{
+    display: flex; 
+     justify-content:space-between; 
+
+}
+.addEmployeeBtn{
+    margin-right: 30px;
+    margin-top: 5px;
+}

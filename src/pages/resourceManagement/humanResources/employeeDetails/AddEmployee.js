@@ -1,5 +1,5 @@
 import "./EmployeeList.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -12,11 +12,12 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import { styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { useAddEmployeeMutation } from "src/api/apiSlice";
+import {
+  useAddEmployeeMutation,
+  useUpdateEmployeeMutation,
+} from "src/api/apiSlice";
 
 const style = {
   position: "absolute",
@@ -32,37 +33,117 @@ const style = {
 };
 
 const AddEmployee = (props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, mode, employee, setAlertVisible, setAlertMsg } =
+    props;
   const [allocatedSiteId, setAllocatedSiteId] = useState("");
-  const [type, setType] = useState("");
-  const [companyId, setCompanyId] = useState("");
+  const [type, setType] = useState("INTERNAL");
+  const [companyId, setCompanyId] = useState("EC1");
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
-  const [dob, setDob] = useState("");
+  const [dob, setDob] = useState(new Date());
   const [address, setAddress] = useState("");
+  const [errorObj, setErrorObj] = useState({
+    name: false,
+    address: false,
+    designation: false,
+  });
 
   const [addEmployee, response] = useAddEmployeeMutation();
+  const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
 
-  const onSubmit = () => {
-    // e.preventDefault()
-    const employee = {
-      allocatedSiteId,
-      name,
-      type,
-      companyId,
-      address,
-      dob,
-      designation,
-    };
-    console.log(employee);
-    addEmployee(employee)
-      .unwrap()
-      .then(() => {
-        handleClose();
-      })
-      .catch((error) => {
-        console.log(error);
+  useEffect(() => {
+    if (type === "EXTERNAL") {
+      setCompanyId("EC1");
+    }
+  }, [type]);
+
+  useEffect(() => {
+    if (employee) {
+      setAllocatedSiteId(employee.allocatedSiteId);
+      setType(employee.type);
+      setName(employee.name);
+
+      if (employee.dob) {
+        setDob(new Date(employee.dob));
+      }
+      setCompanyId(employee.companyId);
+      setAddress(employee.address);
+      setDesignation(employee.designation);
+    }
+  }, [employee]);
+
+  const resetData = () => {
+    setAllocatedSiteId("");
+    setType("INTERNAL");
+    setName("");
+    setDob(new Date());
+    setCompanyId("");
+    setAddress("");
+    setDesignation("");
+  };
+
+  const resetErrors = () => {
+    setErrorObj({
+      name: false,
+      address: false,
+      designation: false,
+    });
+  };
+
+  const validate = () => {
+    let valid = true;
+    if (name === "" || designation === "" || address === "") {
+      setErrorObj({
+        name: name === "",
+        designation: designation === "",
+        address: address === "",
       });
+      valid = false;
+    }
+    return valid;
+  };
+  console.log(errorObj);
+  const onSubmit = () => {
+    const isValid = validate();
+    if (isValid) {
+      const formattedDateString = dob.toISOString().slice(0, 10);
+      const newEmployee = {
+        allocatedSiteId,
+        name,
+        type,
+        companyId,
+        address,
+        formattedDateString,
+        designation,
+      };
+      if (mode === "add") {
+        addEmployee(newEmployee)
+          .unwrap()
+          .then(() => {
+            handleClose();
+            resetData();
+            setAlertVisible(true);
+            setAlertMsg("Successfully added employee.");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        newEmployee.id = employee.id;
+        console.log(newEmployee);
+        updateEmployee(newEmployee)
+          .unwrap()
+          .then(() => {
+            handleClose();
+            resetData();
+            setAlertVisible(true);
+            setAlertMsg("Successfully updated employee.");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
   };
 
   return (
@@ -75,7 +156,13 @@ const AddEmployee = (props) => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <b>Add New Employee</b>
+            <b>
+              {mode === "view"
+                ? "View Employee"
+                : mode === "edit"
+                ? "Edit Employee"
+                : "Add Employee"}
+            </b>
           </Typography>
           <Grid container spacing={2} sx={{ mt: 3 }}>
             <Grid item xs={2}>
@@ -85,10 +172,17 @@ const AddEmployee = (props) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                error={errorObj.name}
+                helperText={errorObj.name ? "This field is required." : " "}
+                InputProps={{
+                  readOnly: mode === "view",
+                }}
                 size="small"
                 id="outlined-basic"
                 variant="outlined"
+                value={name}
                 onChange={(event) => {
+                  setErrorObj({ ...errorObj, name: false });
                   setName(event.target.value);
                 }}
               />
@@ -100,6 +194,7 @@ const AddEmployee = (props) => {
             </Grid>
             <Grid item xs={4}>
               <Select
+                readOnly={mode === "view"}
                 size="small"
                 id="demo-select-small"
                 value={allocatedSiteId}
@@ -122,10 +217,17 @@ const AddEmployee = (props) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                error={errorObj.address}
+                helperText={errorObj.address ? "This field is required." : " "}
+                InputProps={{
+                  readOnly: mode === "view",
+                }}
                 size="small"
                 id="outlined-basic"
                 variant="outlined"
+                value={address}
                 onChange={(event) => {
+                  setErrorObj({ ...errorObj, address: false });
                   setAddress(event.target.value);
                 }}
               />
@@ -137,16 +239,19 @@ const AddEmployee = (props) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                InputProps={{
+                  readOnly: mode === "view",
+                }}
                 id="date"
                 type="date"
-                defaultValue="2017-05-24"
+                value={dob.toISOString().slice(0, 10)}
                 size="small"
                 sx={{ width: 220 }}
                 InputLabelProps={{
                   shrink: true,
                 }}
                 onChange={(event) => {
-                  setDob(event.target.value);
+                  setDob(new Date(event.target.value));
                 }}
               />
             </Grid>
@@ -157,10 +262,19 @@ const AddEmployee = (props) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                error={errorObj.designation}
+                helperText={
+                  errorObj.designation ? "This field is required." : " "
+                }
+                InputProps={{
+                  readOnly: mode === "view",
+                }}
+                value={designation}
                 size="small"
                 id="outlined-basic"
                 variant="outlined"
                 onChange={(event) => {
+                  setErrorObj({ ...errorObj, designation: false });
                   setDesignation(event.target.value);
                 }}
               />
@@ -183,11 +297,13 @@ const AddEmployee = (props) => {
                   }}
                 >
                   <FormControlLabel
+                    disabled={mode === "view"}
                     value="INTERNAL"
                     control={<Radio />}
                     label="Internal"
                   />
                   <FormControlLabel
+                    disabled={mode === "view"}
                     value="EXTERNAL"
                     control={<Radio />}
                     label="External"
@@ -204,6 +320,7 @@ const AddEmployee = (props) => {
                 </Grid>
                 <Grid item xs={4}>
                   <Select
+                    readOnly={mode === "view"}
                     size="small"
                     id="demo-select-small"
                     value={companyId}
@@ -227,30 +344,54 @@ const AddEmployee = (props) => {
               marginBottom: "20px",
             }}
           >
-            <Button
-              variant="outlined"
-              onClick={handleClose}
-              sx={{
-                border: "1px solid",
-                borderColor: "darkBlue",
-                color: "darkBlue",
-                marginRight: "20px",
-                width: "160px",
-              }}
-            >
-              Cancel
-            </Button>
-            <LoadingButton
-              variant="contained"
-              sx={{
-                backgroundColor: "darkBlue",
-                width: "160px",
-              }}
-              onClick={onSubmit}
-              loading={response.isLoading}
-            >
-              Add
-            </LoadingButton>
+            {mode === "view" && (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  handleClose();
+                }}
+                sx={{
+                  border: "1px solid",
+                  borderColor: "darkBlue",
+                  color: "darkBlue",
+                  marginRight: "20px",
+                  width: "160px",
+                }}
+              >
+                Close
+              </Button>
+            )}
+            {mode !== "view" && (
+              <>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    resetErrors();
+                    handleClose();
+                  }}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "darkBlue",
+                    color: "darkBlue",
+                    marginRight: "20px",
+                    width: "160px",
+                  }}
+                >
+                  Cancel
+                </Button>
+                <LoadingButton
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "darkBlue",
+                    width: "160px",
+                  }}
+                  onClick={onSubmit}
+                  loading={response.isLoading}
+                >
+                  {mode === "add" ? "Add" : "Update"}
+                </LoadingButton>
+              </>
+            )}
           </Box>
         </Box>
       </Modal>

@@ -28,7 +28,7 @@ export const apiSlice = createApi({
         return {
           url: `/employees/${id}`,
           method: "PUT",
-          body,
+          body: payload,
         };
       },
       invalidatesTags: ["Employee"],
@@ -37,7 +37,6 @@ export const apiSlice = createApi({
       query: (id) => ({
         url: `/employees/${id}`,
         method: "DELETE",
-        credentials: "include",
       }),
       invalidatesTags: ["Employee"],
     }),

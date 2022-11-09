@@ -16,12 +16,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import {
   useAddEmployeeMutation,
+  useGetCorpsQuery,
   useUpdateEmployeeMutation,
 } from "src/api/apiSlice";
 
 const style = {
   position: "absolute",
-  top: "50%",
+  top: "54%",
   left: "61%",
   transform: "translate(-50%, -50%)",
   width: "74%",
@@ -37,8 +38,9 @@ const AddEmployee = (props) => {
     props;
   const [allocatedSiteId, setAllocatedSiteId] = useState("");
   const [type, setType] = useState("INTERNAL");
-  const [companyId, setCompanyId] = useState("EC1");
+  const [companyId, setCompanyId] = useState("");
   const [name, setName] = useState("");
+  const [empId, setEmpId] = useState("");
   const [designation, setDesignation] = useState("");
   const [dob, setDob] = useState(new Date());
   const [address, setAddress] = useState("");
@@ -46,16 +48,19 @@ const AddEmployee = (props) => {
     name: false,
     address: false,
     designation: false,
+    empId: false,
   });
 
   const [addEmployee, response] = useAddEmployeeMutation();
   const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
-
+  const { data } = useGetCorpsQuery({
+    refetchOnMountOrArgChange: true,
+  });
   useEffect(() => {
-    if (type === "EXTERNAL") {
-      setCompanyId("EC1");
+    if (type === "EXTERNAL" && data.length >= 1 && !employee.companyId) {
+      setCompanyId(data[0].id);
     }
-  }, [type]);
+  }, [data, employee, type]);
 
   useEffect(() => {
     if (employee) {
@@ -69,6 +74,7 @@ const AddEmployee = (props) => {
       setCompanyId(employee.companyId);
       setAddress(employee.address);
       setDesignation(employee.designation);
+      setEmpId(employee.empId);
     }
   }, [employee]);
 
@@ -80,6 +86,7 @@ const AddEmployee = (props) => {
     setCompanyId("");
     setAddress("");
     setDesignation("");
+    setEmpId("");
   };
 
   const resetErrors = () => {
@@ -87,22 +94,23 @@ const AddEmployee = (props) => {
       name: false,
       address: false,
       designation: false,
+      empId: false,
     });
   };
 
   const validate = () => {
     let valid = true;
-    if (name === "" || designation === "" || address === "") {
+    if (name === "" || designation === "" || address === "" || empId === "") {
       setErrorObj({
         name: name === "",
         designation: designation === "",
         address: address === "",
+        empId: empId === "",
       });
       valid = false;
     }
     return valid;
   };
-  console.log(errorObj);
   const onSubmit = () => {
     const isValid = validate();
     if (isValid) {
@@ -115,6 +123,7 @@ const AddEmployee = (props) => {
         address,
         formattedDateString,
         designation,
+        empId,
       };
       if (mode === "add") {
         addEmployee(newEmployee)
@@ -130,7 +139,6 @@ const AddEmployee = (props) => {
           });
       } else {
         newEmployee.id = employee.id;
-        console.log(newEmployee);
         updateEmployee(newEmployee)
           .unwrap()
           .then(() => {
@@ -184,6 +192,28 @@ const AddEmployee = (props) => {
                 onChange={(event) => {
                   setErrorObj({ ...errorObj, name: false });
                   setName(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
+                Employee ID:
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                error={errorObj.empId}
+                helperText={errorObj.empId ? "This field is required." : " "}
+                InputProps={{
+                  readOnly: mode === "view",
+                }}
+                size="small"
+                id="outlined-basic"
+                variant="outlined"
+                value={empId}
+                onChange={(event) => {
+                  setErrorObj({ ...errorObj, empId: false });
+                  setEmpId(event.target.value);
                 }}
               />
             </Grid>
@@ -279,8 +309,7 @@ const AddEmployee = (props) => {
                 }}
               />
             </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={4}></Grid>
+
             <Grid item xs={2}>
               <Typography id="modal-modal-description" sx={{ mt: 1 }}>
                 Type:
@@ -328,9 +357,9 @@ const AddEmployee = (props) => {
                       setCompanyId(event.target.value);
                     }}
                   >
-                    <MenuItem value="EC1">Conc Ltd</MenuItem>
-                    <MenuItem value="EC2">LT ENG Corp</MenuItem>
-                    <MenuItem value="EC3">CLCI Ltd</MenuItem>
+                    {data.map((corp) => (
+                      <MenuItem value={corp.id}>{corp.companyName}</MenuItem>
+                    ))}
                   </Select>
                 </Grid>
               </>

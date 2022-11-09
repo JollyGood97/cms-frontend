@@ -7,6 +7,8 @@ import Overview from "./pages/Overview";
 import { Reports, ReportsOne, ReportsTwo, ReportsThree } from "./pages/Reports";
 import Team from "./pages/Team";
 import EmployeeList from "./pages/resourceManagement/humanResources/employeeDetails/EmployeeList";
+import CorpsList from "./pages/resourceManagement/humanResources/engineeringCorps/CorpsList";
+import SiteReqList from "./pages/resourceManagement/humanResources/siteRequests/SiteReqList";
 
 function App() {
   return (
@@ -21,8 +23,17 @@ function App() {
           exact
           component={EmployeeList}
         />
-        <Route path="/resources/leave-requests" exact component={ReportsTwo} />
-        <Route path="/resources/site-requests" exact component={ReportsThree} />
+        <Route path="/resources/human/corps" exact component={CorpsList} />
+        <Route
+          path="/resources/human/leave-requests"
+          exact
+          component={ReportsTwo}
+        />
+        <Route
+          path="/resources/human/site-requests"
+          exact
+          component={SiteReqList}
+        />
         <Route path="/team" exact component={Team} />
       </Switch>
     </Router>

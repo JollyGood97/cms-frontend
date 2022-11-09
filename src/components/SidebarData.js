@@ -59,12 +59,12 @@ export const SidebarData = [
           },
           {
             title: "Site Requests",
-            path: "/resources/site-requests",
+            path: "/resources/human/site-requests",
             icon: <IoIcons.IoIosPaper />,
           },
           {
             title: "Engineering Corps",
-            path: "/resources/corps",
+            path: "/resources/human/corps",
             icon: <IoIcons.IoIosPaper />,
           },
         ],

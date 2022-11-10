@@ -7,25 +7,25 @@ import * as RiIcons from "react-icons/ri";
 export const SidebarData = [
   {
     title: "Dashboard",
-    path: "/products",
+    path: "/dashboard",
     icon: <AiIcons.AiFillHome />,
   },
   {
     title: "Contract Management",
-    path: "/overview",
+    path: "/contract-management",
     icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
 
     subNav: [
       {
-        title: "Users",
-        path: "/overview/users",
+        title: "Contracts",
+        path: "/contract-management/contracts",
         icon: <IoIcons.IoIosPaper />,
       },
       {
-        title: "Revenue",
-        path: "/overview/revenue",
+        title: "Milestones",
+        path: "/contract-management/milestones",
         icon: <IoIcons.IoIosPaper />,
       },
     ],

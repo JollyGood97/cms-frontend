@@ -1,10 +1,10 @@
 import "./App.css";
 import React from "react";
-
+import { Outlet } from "react-router";
 import Sidebar from "./components/Sidebar";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Overview from "./pages/Overview";
-import Team from "./pages/Team";
+import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/resourceManagement/humanResources/employeeDetails/EmployeeList";
 import CorpsList from "./pages/resourceManagement/humanResources/engineeringCorps/CorpsList";
 import SiteReqList from "./pages/resourceManagement/humanResources/siteRequests/SiteReqList";
@@ -13,53 +13,59 @@ import LeaveReqList from "./pages/resourceManagement/humanResources/leaveRequest
 import MachineList from "./pages/resourceManagement/machinery/machineDetails/MachineList";
 import RentalsList from "./pages/resourceManagement/machinery/machineRentals/RentalsList";
 import Login from "./pages/login/Login";
+import Contract from "./pages/contractManagement/Contract";
+import Milestone from "./pages/contractManagement/Milestone";
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <>
-          <Sidebar />
-          <Route path="/overview" exact component={Overview} />
-          <Route path="/resources" exact component={EmployeeList} />
-          <Route path="/resources/human" exact component={EmployeeList} />
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Outlet />}>
+          <Route path="/" element={<Login />} />
+        </Route>
+        <Route
+          element={
+            <>
+              <Sidebar />
+              <Outlet />
+            </>
+          }
+        >
+          <Route path="/contract-management" element={<Contract />} />
+          <Route path="/contract-management/contracts" element={<Contract />} />
           <Route
-            path="/resources/human/employees"
-            exact
-            component={EmployeeList}
+            path="/contract-management/milestones"
+            element={<Milestone />}
           />
-          <Route path="/resources/human/corps" exact component={CorpsList} />
+
+          <Route path="/resources" element={<EmployeeList />} />
+          <Route path="/resources/human" element={<EmployeeList />} />
+          <Route path="/resources/human/employees" element={<EmployeeList />} />
+          <Route path="/resources/human/corps" element={<CorpsList />} />
           <Route
             path="/resources/human/leave-requests"
-            exact
-            component={LeaveReqList}
+            element={<LeaveReqList />}
           />
           <Route
             path="/resources/human/site-requests"
-            exact
-            component={SiteReqList}
+            element={<SiteReqList />}
           />
           <Route
             path="/resources/machinery/machines"
-            exact
-            component={MachineList}
+            element={<MachineList />}
           />
           <Route
             path="/resources/machinery/site-requests"
-            exact
-            component={MSiteReqList}
+            element={<MSiteReqList />}
           />
           <Route
             path="/resources/machinery/rentals"
-            exact
-            component={RentalsList}
+            element={<RentalsList />}
           />
-          <Route path="/team" exact component={Team} />
-          <Route path="/team" exact component={Team} />
-        </>
-      </Switch>
-    </Router>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

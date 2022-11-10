@@ -1,14 +1,35 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 
 import "../../App.css";
 import Button from "@mui/material/Button";
+import { useLoginMutation } from "src/api/apiSlice";
 
 const Login = () => {
+  let navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [login, response] = useLoginMutation();
+
+  const loginUser = () => {
+    login({ username, password })
+      .unwrap()
+      .then((userDetails) => {
+        if (userDetails.token) {
+          localStorage.setItem("user", JSON.stringify(userDetails));
+          navigate("/dashboard");
+          window.location.reload();
+        }
+      })
+      .catch((error) => {});
+  };
 
   return (
     <Box className="loginBox">
@@ -63,14 +84,13 @@ const Login = () => {
       </Grid>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Button
+          disabled={username === "" || password === ""}
           variant="outlined"
-          onClick={() => {}}
+          onClick={loginUser}
           sx={{
-            border: "5px solid",
-            borderColor: "cyan",
             color: "black",
             marginTop: "50px",
-            backgroundColor: "white",
+            backgroundColor: "cyan",
             marginRight: "20px",
             width: "160px",
             "&:hover": { backgroundColor: "cyan" },

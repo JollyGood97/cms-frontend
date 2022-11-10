@@ -54,8 +54,7 @@ const SubMenu = ({ item }) => {
       <NavLink
         to={item.path}
         onClick={item.subNav && showSubnav}
-        activeClassName="activeLinks"
-        className="links"
+        className={({ isActive }) => (isActive ? "activeLinks" : "links")}
       >
         <div>
           {item.icon}
@@ -75,8 +74,9 @@ const SubMenu = ({ item }) => {
             <>
               <NavLink
                 to={item.path}
-                activeClassName="activeLinks"
-                className="links"
+                className={({ isActive }) =>
+                  isActive ? "activeLinks" : "links"
+                }
                 onClick={item.subNav && showSubnav2}
                 style={{
                   backgroundColor: "#000000",
@@ -98,8 +98,9 @@ const SubMenu = ({ item }) => {
                 item.subNav.map((item, index) => {
                   return (
                     <NavLink
-                      activeClassName="dropdownLinkActive"
-                      className="dropdownLink"
+                      className={({ isActive }) =>
+                        isActive ? "dropdownLinkActive" : "dropdownLink"
+                      }
                       to={item.path}
                       key={index}
                     >
@@ -111,8 +112,9 @@ const SubMenu = ({ item }) => {
             </>
           ) : (
             <NavLink
-              activeClassName="dropdownLinkActive"
-              className="dropdownLink"
+              className={({ isActive }) =>
+                isActive ? "dropdownLinkActive" : "dropdownLink"
+              }
               to={item.path}
               key={index}
             >

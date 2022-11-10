@@ -1,75 +1,70 @@
 // @ts-nocheck
-import "./EmployeeList.css";
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
 import { ThemeProvider, createTheme } from "@mui/material";
-import AddEmployee from "./AddEmployee";
+import AddEditMachine from "./AddEditMachine";
 import tableIcons from "src/components/MaterialTableIcons";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Alert from "@mui/material/Alert";
 
 import {
-  useAddEmployeeMutation,
-  useGetEmployeesQuery,
-  useDeleteEmployeeMutation,
+  useGetMachinesQuery,
+  useDeleteMachineMutation,
 } from "src/api/apiSlice";
 import ConfirmDialog from "src/components/ConfirmDialog";
+import "src/pages/resourceManagement/Machine.css";
 
 const defaultMaterialTheme = createTheme();
 
-const EmployeeList = () => {
+const MachineList = () => {
   const [open, setOpen] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
 
-  const [employees, setEmployees] = useState();
-  const [employee, setEmployee] = useState();
+  const [machines, setMachines] = useState();
+  const [machine, setMachine] = useState();
   const [mode, setMode] = useState("add");
 
-  const { data, isLoading } = useGetEmployeesQuery({
+  const { data, isLoading } = useGetMachinesQuery({
     refetchOnMountOrArgChange: true,
   });
-  const [deleteEmployee, { isSuccess: deleteSuccess }] =
-    useDeleteEmployeeMutation();
+  const [deleteMachine, { isSuccess: deleteSuccess }] =
+    useDeleteMachineMutation();
 
   useEffect(() => {
-    data && setEmployees(JSON.parse(JSON.stringify(data)));
+    data && setMachines(JSON.parse(JSON.stringify(data)));
   }, [data]);
 
   useEffect(() => {
     if (deleteSuccess) {
       setAlertVisible(true);
-      setAlertMsg("Successfully deleted employee.");
+      setAlertMsg("Successfully deleted machine.");
     }
   }, [deleteSuccess]);
 
   const resetData = () => {
-    setEmployee({
+    setMachine({
       allocatedSiteId: "",
       name: "",
-      type: "INTERNAL",
+      type: "OWNED",
       companyId: "",
-      address: "",
-      dob: new Date(),
-      designation: "",
-      empId: "",
+      machineId: "",
     });
   };
 
   const columns = [
-    { title: "E_ID", field: "empId" },
-    { title: "Name", field: "name" },
+    { title: "Machine_ID", field: "machineId" },
+    { title: "Category", field: "name" },
     { title: "Type", field: "type" },
     { title: "Site", field: "allocatedSiteId" },
-    { title: "Designation", field: "designation" },
   ];
 
   return (
     <div className="reports">
       <div className="employeeListWrapper">
-        <h1>Manage Employees</h1>
+        <h1>Manage Machines</h1>
         <div className="addEmployeeBtn">
           <Button
             variant="contained"
@@ -79,7 +74,7 @@ const EmployeeList = () => {
               setOpen(true);
             }}
           >
-            Add Employee
+            Add Machine
           </Button>
         </div>
       </div>
@@ -90,11 +85,11 @@ const EmployeeList = () => {
       )}
       <div className="empTable">
         <ThemeProvider theme={defaultMaterialTheme}>
-          {employees && (
+          {machines && (
             <MaterialTable
-              title="Employees List"
+              title="Machines List"
               columns={columns}
-              data={employees}
+              data={machines}
               icons={tableIcons}
               options={{
                 actionsColumnIndex: -1,
@@ -105,7 +100,7 @@ const EmployeeList = () => {
                   tooltip: "View",
                   onClick: (event, rowData) => {
                     setMode("view");
-                    setEmployee(rowData);
+                    setMachine(rowData);
                     setOpen(true);
                   },
                 },
@@ -114,7 +109,7 @@ const EmployeeList = () => {
                   tooltip: "Edit",
                   onClick: (event, rowData) => {
                     setMode("edit");
-                    setEmployee(rowData);
+                    setMachine(rowData);
                     setOpen(true);
                   },
                 },
@@ -122,7 +117,7 @@ const EmployeeList = () => {
                   icon: tableIcons.Delete,
                   tooltip: "Delete",
                   onClick: (event, rowData) => {
-                    setEmployee(rowData);
+                    setMachine(rowData);
                     setDialogVisible(true);
                   },
                 },
@@ -131,8 +126,8 @@ const EmployeeList = () => {
           )}
         </ThemeProvider>
       </div>
-      <AddEmployee
-        employee={employee}
+      <AddEditMachine
+        machine={machine}
         open={open}
         mode={mode}
         setAlertVisible={setAlertVisible}
@@ -140,16 +135,16 @@ const EmployeeList = () => {
         handleClose={() => setOpen(false)}
       />
       <ConfirmDialog
-        content="Are you sure you want to delete this Employee? This action cannot be undone."
-        title="Delete Employee"
+        content="Are you sure you want to delete this Machine? This action cannot be undone."
+        title="Delete Machine"
         dialogVisible={dialogVisible}
         setDialogVisible={setDialogVisible}
         onConfirm={() => {
-          deleteEmployee(employee.id);
+          deleteMachine(machine.id);
         }}
       />
     </div>
   );
 };
 
-export default EmployeeList;
+export default MachineList;

@@ -7,46 +7,46 @@ import * as RiIcons from "react-icons/ri";
 export const SidebarData = [
   {
     title: "Dashboard",
-    path: "/products",
+    path: "/dashboard",
     icon: <AiIcons.AiFillHome />,
   },
   {
     title: "Contract Management",
-    path: "/overview",
+    path: "/contract-management",
     icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
 
     subNav: [
       {
-        title: "Users",
-        path: "/overview/users",
+        title: "Contracts",
+        path: "/contract-management/contracts",
         icon: <IoIcons.IoIosPaper />,
       },
       {
-        title: "Revenue",
-        path: "/overview/revenue",
+        title: "Milestones",
+        path: "/contract-management/milestones",
         icon: <IoIcons.IoIosPaper />,
       },
     ],
   },
   {
     title: "Resource Management",
-    path: "/resources/human/employees",
+    path: "/resources",
     icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
     subNav: [
       {
         title: "Human Resources",
-        path: "/resources/human/employees",
+        path: "/resources/human",
         icon: <IoIcons.IoIosPaper />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         cName: "sub-nav",
         subNav: [
           {
-            title: "Employee Details",
+            title: "Employees",
             path: "/resources/human/employees",
             icon: <IoIcons.IoIosPaper />,
             cName: "sub-nav",
@@ -59,12 +59,12 @@ export const SidebarData = [
           },
           {
             title: "Site Requests",
-            path: "/resources/site-requests",
+            path: "/resources/human/site-requests",
             icon: <IoIcons.IoIosPaper />,
           },
           {
             title: "Engineering Corps",
-            path: "/resources/corps",
+            path: "/resources/human/corps",
             icon: <IoIcons.IoIosPaper />,
           },
         ],
@@ -79,10 +79,20 @@ export const SidebarData = [
         cName: "sub-nav",
         subNav: [
           {
-            title: "Machinery Details",
+            title: "Machines",
             path: "/resources/machinery/machines",
             icon: <IoIcons.IoIosPaper />,
             cName: "sub-nav",
+          },
+          {
+            title: "Site Requests",
+            path: "/resources/machinery/site-requests",
+            icon: <IoIcons.IoIosPaper />,
+          },
+          {
+            title: "Machinery Rentals",
+            path: "/resources/machinery/rentals",
+            icon: <IoIcons.IoIosPaper />,
           },
         ],
       },
@@ -108,10 +118,5 @@ export const SidebarData = [
         icon: <IoIcons.IoIosPaper />,
       },
     ],
-  },
-  {
-    title: "Support",
-    path: "/support",
-    icon: <IoIcons.IoMdHelpCircle />,
   },
 ];

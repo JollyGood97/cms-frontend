@@ -7,6 +7,7 @@ import * as AiIcons from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
+import Button from "@mui/material/Button";
 
 const Nav = styled.div`
   background: #040338;
@@ -51,7 +52,25 @@ const Sidebar = () => {
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
-        <Nav></Nav>
+        <Nav>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              localStorage.removeItem("user");
+            }}
+            sx={{
+              color: "black",
+              marginLeft: "90%",
+              backgroundColor: "cyan",
+              marginRight: "20px",
+              width: "160px",
+              "&:hover": { backgroundColor: "cyan" },
+            }}
+          >
+            LOG OUT
+          </Button>
+        </Nav>
+
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <div>

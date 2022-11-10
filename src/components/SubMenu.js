@@ -1,6 +1,8 @@
+// @ts-nocheck
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
+import "../App.css";
 
 const SidebarLink = styled(Link)`
   display: flex;
@@ -35,7 +37,7 @@ const DropdownLink = styled(Link)`
   font-size: 18px;
 
   &:hover {
-    background: #632ce4;
+    background: #313238;
     cursor: pointer;
   }
 `;
@@ -49,7 +51,11 @@ const SubMenu = ({ item }) => {
 
   return (
     <>
-      <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
+      <NavLink
+        to={item.path}
+        onClick={item.subNav && showSubnav}
+        className={({ isActive }) => (isActive ? "activeLinks" : "links")}
+      >
         <div>
           {item.icon}
           <SidebarLabel>{item.title}</SidebarLabel>
@@ -61,15 +67,20 @@ const SubMenu = ({ item }) => {
             ? item.iconClosed
             : null}
         </div>
-      </SidebarLink>
+      </NavLink>
       {subnav &&
         item.subNav.map((item, index) => {
           return item.subNav ? (
             <>
-              <SidebarLink
+              <NavLink
                 to={item.path}
+                className={({ isActive }) =>
+                  isActive ? "activeLinks" : "links"
+                }
                 onClick={item.subNav && showSubnav2}
-                style={{ backgroundColor: "#104bb0" }}
+                style={{
+                  backgroundColor: "#000000",
+                }}
               >
                 <div>
                   {item.icon}
@@ -82,22 +93,34 @@ const SubMenu = ({ item }) => {
                     ? item.iconClosed
                     : null}
                 </div>
-              </SidebarLink>
+              </NavLink>
               {subnav2 &&
                 item.subNav.map((item, index) => {
                   return (
-                    <DropdownLink to={item.path} key={index}>
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive ? "dropdownLinkActive" : "dropdownLink"
+                      }
+                      to={item.path}
+                      key={index}
+                    >
                       {item.icon}
                       <SidebarLabel>{item.title}</SidebarLabel>
-                    </DropdownLink>
+                    </NavLink>
                   );
                 })}
             </>
           ) : (
-            <DropdownLink to={item.path} key={index}>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "dropdownLinkActive" : "dropdownLink"
+              }
+              to={item.path}
+              key={index}
+            >
               {item.icon}
               <SidebarLabel>{item.title}</SidebarLabel>
-            </DropdownLink>
+            </NavLink>
           );
         })}
     </>

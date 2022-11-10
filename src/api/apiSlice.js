@@ -4,7 +4,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080",
   }),
-  tagTypes: ["Employee", "Corp", "SiteReq"],
+  tagTypes: ["Employee", "Corp", "SiteReq", "LeaveReq", "Machine", "Rental"],
   endpoints: (builder) => ({
     getEmployees: builder.query({
       query: () => "/employees",
@@ -23,7 +23,7 @@ export const apiSlice = createApi({
     }),
     updateEmployee: builder.mutation({
       query: (payload) => {
-        const { id, ...body } = payload;
+        const { id } = payload;
         return {
           url: `/employees/${id}`,
           method: "PUT",
@@ -79,6 +79,79 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ["SiteReq"],
     }),
+    getLeaveReqs: builder.query({
+      query: () => "/leave-requests",
+      providesTags: ["LeaveReq"],
+    }),
+    approveDeclineLeaveReq: builder.mutation({
+      query: (payload) => {
+        const { id, isApproved } = payload;
+        return {
+          url: `/leave-requests/${id}/${isApproved}`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["LeaveReq"],
+    }),
+    getMachines: builder.query({
+      query: () => "/machines",
+      providesTags: ["Machine"],
+    }),
+    addMachine: builder.mutation({
+      query: (payload) => ({
+        url: "/machines",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["Machine"],
+    }),
+    updateMachine: builder.mutation({
+      query: (payload) => {
+        const { id } = payload;
+        return {
+          url: `/machines/${id}`,
+          method: "PUT",
+          body: payload,
+        };
+      },
+      invalidatesTags: ["Machine"],
+    }),
+    deleteMachine: builder.mutation({
+      query: (id) => ({
+        url: `/machines/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Machine"],
+    }),
+    getRentals: builder.query({
+      query: () => "/machinery-rentals",
+      providesTags: ["Rental"],
+    }),
+    addRental: builder.mutation({
+      query: (payload) => ({
+        url: "/machinery-rentals",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["Rental"],
+    }),
+    getMachinesByRental: builder.query({
+      query: (rentalId) => `/machines/rentals/${rentalId}`,
+      providesTags: ["Machine"],
+    }),
+    deleteRental: builder.mutation({
+      query: (id) => ({
+        url: `/machinery-rentals/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Rental"],
+    }),
   }),
 });
 export const {
@@ -92,4 +165,14 @@ export const {
   useDeleteCorpMutation,
   useGetSiteReqsQuery,
   useMarkCompleteSiteReqMutation,
+  useApproveDeclineLeaveReqMutation,
+  useGetLeaveReqsQuery,
+  useAddMachineMutation,
+  useAddRentalMutation,
+  useGetMachinesQuery,
+  useGetRentalsQuery,
+  useGetMachinesByRentalQuery,
+  useDeleteMachineMutation,
+  useDeleteRentalMutation,
+  useUpdateMachineMutation,
 } = apiSlice;

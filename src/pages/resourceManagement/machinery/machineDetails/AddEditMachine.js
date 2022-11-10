@@ -1,4 +1,3 @@
-import "./EmployeeList.css";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,10 +14,11 @@ import FormControl from "@mui/material/FormControl";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import {
-  useAddEmployeeMutation,
-  useGetCorpsQuery,
-  useUpdateEmployeeMutation,
+  useAddMachineMutation,
+  useGetRentalsQuery,
+  useUpdateMachineMutation,
 } from "src/api/apiSlice";
+import "src/pages/resourceManagement/Machine.css";
 
 const style = {
   position: "absolute",
@@ -33,79 +33,61 @@ const style = {
   flexGrow: 1,
 };
 
-const AddEmployee = (props) => {
-  const { open, handleClose, mode, employee, setAlertVisible, setAlertMsg } =
+const AddEditMachine = (props) => {
+  const { open, handleClose, mode, machine, setAlertVisible, setAlertMsg } =
     props;
   const [allocatedSiteId, setAllocatedSiteId] = useState("");
   const [type, setType] = useState("INTERNAL");
   const [companyId, setCompanyId] = useState("");
-  const [name, setName] = useState("");
-  const [empId, setEmpId] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [dob, setDob] = useState(new Date());
-  const [address, setAddress] = useState("");
+  const [name, setName] = useState("bulldozer");
+  const [machineId, setMachineId] = useState("");
   const [errorObj, setErrorObj] = useState({
     name: false,
-    address: false,
-    designation: false,
-    empId: false,
+    machineId: false,
   });
 
-  const [addEmployee, response] = useAddEmployeeMutation();
-  const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
-  const { data } = useGetCorpsQuery({
+  const [addMachine, response] = useAddMachineMutation();
+  const [updateMachine, { isLoading }] = useUpdateMachineMutation();
+  const { data } = useGetRentalsQuery({
     refetchOnMountOrArgChange: true,
   });
   useEffect(() => {
-    if (type === "EXTERNAL" && data.length >= 1 && !employee.companyId) {
+    if (type === "RENTED" && data.length >= 1 && !machine.companyId) {
       setCompanyId(data[0].id);
     }
-  }, [data, employee, type]);
+  }, [data, machine, type]);
 
   useEffect(() => {
-    if (employee && employee.id) {
-      setAllocatedSiteId(employee.allocatedSiteId);
-      setType(employee.type);
-      setName(employee.name);
-
-      if (employee.dob) {
-        setDob(new Date(employee.dob));
-      }
-      setCompanyId(employee.companyId);
-      setAddress(employee.address);
-      setDesignation(employee.designation);
-      setEmpId(employee.empId);
+    if (machine && machine.id) {
+      setAllocatedSiteId(machine.allocatedSiteId);
+      setType(machine.type);
+      setName(machine.name);
+      setCompanyId(machine.companyId);
+      setMachineId(machine.machineId);
     }
-  }, [employee]);
+  }, [machine]);
 
   const resetData = () => {
     setAllocatedSiteId("");
-    setType("INTERNAL");
+    setType("OWNED");
     setName("");
-    setDob(new Date());
     setCompanyId("");
-    setAddress("");
-    setDesignation("");
-    setEmpId("");
+    setMachineId("");
   };
 
   const resetErrors = () => {
     setErrorObj({
       name: false,
-      address: false,
-      designation: false,
-      empId: false,
+      machineId: false,
     });
   };
 
   const validate = () => {
     let valid = true;
-    if (name === "" || designation === "" || address === "" || empId === "") {
+    if (name === "" || machineId === "") {
       setErrorObj({
         name: name === "",
-        designation: designation === "",
-        address: address === "",
-        empId: empId === "",
+        machineId: machineId === "",
       });
       valid = false;
     }
@@ -114,38 +96,34 @@ const AddEmployee = (props) => {
   const onSubmit = () => {
     const isValid = validate();
     if (isValid) {
-      const formattedDateString = dob.toISOString().slice(0, 10);
-      const newEmployee = {
+      const newMachine = {
         allocatedSiteId,
         name,
         type,
         companyId,
-        address,
-        formattedDateString,
-        designation,
-        empId,
+        machineId,
       };
       if (mode === "add") {
-        addEmployee(newEmployee)
+        addMachine(newMachine)
           .unwrap()
           .then(() => {
             handleClose();
             resetData();
             setAlertVisible(true);
-            setAlertMsg("Successfully added employee.");
+            setAlertMsg("Successfully added machine.");
           })
           .catch((error) => {
             console.log(error);
           });
       } else {
-        newEmployee.id = employee.id;
-        updateEmployee(newEmployee)
+        newMachine.id = machine.id;
+        updateMachine(newMachine)
           .unwrap()
           .then(() => {
             handleClose();
             resetData();
             setAlertVisible(true);
-            setAlertMsg("Successfully updated employee.");
+            setAlertMsg("Successfully updated machine.");
           })
           .catch((error) => {
             console.log(error);
@@ -168,54 +146,56 @@ const AddEmployee = (props) => {
               {mode === "view"
                 ? "View Employee"
                 : mode === "edit"
-                ? "Edit Employee"
-                : "Add Employee"}
+                ? "Edit Machine"
+                : "Add Machine"}
             </b>
           </Typography>
           <Grid container spacing={2} sx={{ mt: 3 }}>
             <Grid item xs={2}>
               <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                Full Name:
+                Machine ID:
               </Typography>
             </Grid>
             <Grid item xs={4}>
               <TextField
-                error={errorObj.name}
-                helperText={errorObj.name ? "This field is required." : " "}
+                error={errorObj.machineId}
+                helperText={
+                  errorObj.machineId ? "This field is required." : " "
+                }
                 InputProps={{
                   readOnly: mode === "view",
                 }}
                 size="small"
                 id="outlined-basic"
                 variant="outlined"
-                value={name}
+                value={machineId}
                 onChange={(event) => {
-                  setErrorObj({ ...errorObj, name: false });
-                  setName(event.target.value);
+                  setErrorObj({ ...errorObj, machineId: false });
+                  setMachineId(event.target.value);
                 }}
               />
             </Grid>
             <Grid item xs={2}>
               <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                Employee ID:
+                Category:
               </Typography>
             </Grid>
             <Grid item xs={4}>
-              <TextField
-                error={errorObj.empId}
-                helperText={errorObj.empId ? "This field is required." : " "}
-                InputProps={{
-                  readOnly: mode === "view",
-                }}
+              <Select
+                readOnly={mode === "view"}
                 size="small"
-                id="outlined-basic"
-                variant="outlined"
-                value={empId}
+                id="demo-select-small"
+                value={name}
                 onChange={(event) => {
-                  setErrorObj({ ...errorObj, empId: false });
-                  setEmpId(event.target.value);
+                  setName(event.target.value);
                 }}
-              />
+              >
+                <MenuItem value="Trencher">Trencher</MenuItem>
+                <MenuItem value="Bulldozer">Bulldozer</MenuItem>
+                <MenuItem value="Cement Mixer">Cement Mixer</MenuItem>
+                <MenuItem value="Dump Truck">Dump Truck</MenuItem>
+                <MenuItem value="Backhoe">Backhoe</MenuItem>
+              </Select>
             </Grid>
             <Grid item xs={2}>
               <Typography id="modal-modal-description" sx={{ mt: 1 }}>
@@ -240,76 +220,7 @@ const AddEmployee = (props) => {
                 <MenuItem value="A2">A2</MenuItem>
               </Select>
             </Grid>
-            <Grid item xs={2}>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                Address:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                error={errorObj.address}
-                helperText={errorObj.address ? "This field is required." : " "}
-                InputProps={{
-                  readOnly: mode === "view",
-                }}
-                size="small"
-                id="outlined-basic"
-                variant="outlined"
-                value={address}
-                onChange={(event) => {
-                  setErrorObj({ ...errorObj, address: false });
-                  setAddress(event.target.value);
-                }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                DOB:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                InputProps={{
-                  readOnly: mode === "view",
-                }}
-                id="date"
-                type="date"
-                value={dob.toISOString().slice(0, 10)}
-                size="small"
-                sx={{ width: 220 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(event) => {
-                  setDob(new Date(event.target.value));
-                }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                Designation:
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                error={errorObj.designation}
-                helperText={
-                  errorObj.designation ? "This field is required." : " "
-                }
-                InputProps={{
-                  readOnly: mode === "view",
-                }}
-                value={designation}
-                size="small"
-                id="outlined-basic"
-                variant="outlined"
-                onChange={(event) => {
-                  setErrorObj({ ...errorObj, designation: false });
-                  setDesignation(event.target.value);
-                }}
-              />
-            </Grid>
-
+            <Grid item xs={6}></Grid>
             <Grid item xs={2}>
               <Typography id="modal-modal-description" sx={{ mt: 1 }}>
                 Type:
@@ -327,24 +238,24 @@ const AddEmployee = (props) => {
                 >
                   <FormControlLabel
                     disabled={mode === "view"}
-                    value="INTERNAL"
+                    value="OWNED"
                     control={<Radio />}
-                    label="Internal"
+                    label="Owned"
                   />
                   <FormControlLabel
                     disabled={mode === "view"}
-                    value="EXTERNAL"
+                    value="RENTED"
                     control={<Radio />}
-                    label="External"
+                    label="Rented"
                   />
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {type === "EXTERNAL" && (
+            {type === "RENTED" && (
               <>
                 <Grid item xs={2}>
                   <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                    Eng. Corp.:
+                    Machinery Rental:
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -369,7 +280,7 @@ const AddEmployee = (props) => {
             sx={{
               justifyContent: "center",
               display: "flex",
-              marginTop: "20px",
+              marginTop: "40px",
               marginBottom: "20px",
             }}
           >
@@ -432,4 +343,4 @@ const AddEmployee = (props) => {
   );
 };
 
-export default AddEmployee;
+export default AddEditMachine;

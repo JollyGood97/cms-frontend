@@ -49,9 +49,6 @@ const SubMenu = ({ item }) => {
   const showSubnav = () => setSubnav(!subnav);
   const showSubnav2 = () => setSubnav2(!subnav2);
 
-  const http = "";
-  console.log(item.path);
-  console.log(window.location.href);
   return (
     <>
       <NavLink

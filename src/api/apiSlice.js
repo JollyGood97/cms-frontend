@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { authHeader } from "../util/Util";
+
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
@@ -7,8 +9,11 @@ export const apiSlice = createApi({
   tagTypes: ["Employee", "Corp", "SiteReq", "LeaveReq", "Machine", "Rental"],
   endpoints: (builder) => ({
     getEmployees: builder.query({
-      query: () => "/employees",
-      providesTags: ["Employee"],
+      query: () => ({
+        url: "/employees",
+        headers: authHeader(), //test
+        providesTags: ["Employee"],
+      }),
     }),
     addEmployee: builder.mutation({
       query: (payload) => ({
@@ -152,6 +157,26 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Rental"],
     }),
+    login: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/signin",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    register: builder.mutation({
+      query: (payload) => ({
+        url: "/auth/signup",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
   }),
 });
 export const {
@@ -175,4 +200,6 @@ export const {
   useDeleteMachineMutation,
   useDeleteRentalMutation,
   useUpdateMachineMutation,
+  useLoginMutation,
+  useRegisterMutation,
 } = apiSlice;

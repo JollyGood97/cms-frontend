@@ -16,6 +16,17 @@
   margin-top: 1%;
 }
 
+.loginBox{
+  margin: 0 auto;
+  width: 600px;
+  color: white;
+  background-color: darkblue;
+  padding: 30px;
+  padding-left: 48px;
+  margin-top: 10%;
+  height: 450px;
+}
+
 .links{
   display: flex;
   color: #e1e9fc;

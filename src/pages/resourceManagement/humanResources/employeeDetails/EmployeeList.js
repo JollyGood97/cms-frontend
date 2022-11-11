@@ -1,6 +1,8 @@
 // @ts-nocheck
 import "./EmployeeList.css";
 import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+
 import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -10,11 +12,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Alert from "@mui/material/Alert";
 
 import {
-  useAddEmployeeMutation,
   useGetEmployeesQuery,
   useDeleteEmployeeMutation,
 } from "src/api/apiSlice";
 import ConfirmDialog from "src/components/ConfirmDialog";
+import { getCurrentUser } from "src/util/Util";
+import EventBus from "src/EventBus";
 
 const defaultMaterialTheme = createTheme();
 
@@ -54,9 +57,17 @@ const EmployeeList = () => {
       setAlertMsg(
         "Sorry, you do not have permission to view data in this page!"
       );
-      // if (error.response && error.response.status === 401) {
-      //   EventBus.dispatch("logout");
-      // }
+      const user = getCurrentUser();
+
+      if (
+        user &&
+        error.response &&
+        error.response.status === 401 &&
+        (user.roles.includes("ROLE_SUPER_ADMIN") ||
+          user.roles.includes("ROLE_HR_MANAGER"))
+      ) {
+        EventBus.dispatch("logout");
+      }
     }
   }, [error]);
 
@@ -80,6 +91,11 @@ const EmployeeList = () => {
     { title: "Site", field: "allocatedSiteId" },
     { title: "Designation", field: "designation" },
   ];
+
+  const user = getCurrentUser();
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="reports">

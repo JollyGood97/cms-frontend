@@ -1,8 +1,8 @@
 import "./App.css";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Outlet } from "react-router";
 import Sidebar from "./components/Sidebar";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/resourceManagement/humanResources/employeeDetails/EmployeeList";
 import CorpsList from "./pages/resourceManagement/humanResources/engineeringCorps/CorpsList";
@@ -15,8 +15,26 @@ import Login from "./pages/login/Login";
 import Contract from "./pages/contractManagement/Contract";
 import Milestone from "./pages/contractManagement/Milestone";
 import SupplyRequests from "./pages/supplyManagement/SupplyRequests";
+import EventBus from "./EventBus";
 
 function App() {
+  let navigate = useNavigate();
+
+  const logOut = useCallback(() => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  }, [navigate]);
+
+  useEffect(() => {
+    EventBus.on("logout", () => {
+      logOut();
+    });
+
+    return () => {
+      EventBus.remove("logout");
+    };
+  }, [logOut]);
+
   return (
     <BrowserRouter>
       <Routes>

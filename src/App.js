@@ -70,8 +70,8 @@ function App() {
         />
         <Route path="/resources/machinery/rentals" element={<RentalsList />} />
         <Route path="/" element={<Dashboard />} />
-        <Route path="/supplies" element={<SupplyRequests />} />
-        <Route path="/supplies/supply-requests" element={<SupplyRequests />} />
+        <Route path="/supplies/suppliers" element={<SupplyRequests />} />
+        {/* <Route path="/supplies/supply-requests" element={<SupplyRequests />} /> */}
       </Route>
     </Routes>
   );

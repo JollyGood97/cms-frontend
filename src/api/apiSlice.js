@@ -12,15 +12,17 @@ export const apiSlice = createApi({
       query: () => ({
         url: "/employees",
         headers: authHeader(),
-        providesTags: ["Employee"],
       }),
+      providesTags: ["Employee"],
     }),
+
     addEmployee: builder.mutation({
       query: (payload) => ({
         url: "/employees",
         method: "POST",
         body: payload,
         headers: {
+          ...authHeader(),
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
@@ -33,6 +35,7 @@ export const apiSlice = createApi({
           url: `/employees/${id}`,
           method: "PUT",
           body: payload,
+          headers: authHeader(),
         };
       },
       invalidatesTags: ["Employee"],
@@ -41,11 +44,15 @@ export const apiSlice = createApi({
       query: (id) => ({
         url: `/employees/${id}`,
         method: "DELETE",
+        headers: authHeader(),
       }),
       invalidatesTags: ["Employee"],
     }),
     getCorps: builder.query({
-      query: () => "/engineering-corps",
+      query: () => ({
+        url: "/engineering-corps",
+        headers: authHeader(),
+      }),
       providesTags: ["Corp"],
     }),
     addCorp: builder.mutation({
@@ -54,19 +61,24 @@ export const apiSlice = createApi({
         method: "POST",
         body: payload,
         headers: {
+          ...authHeader(),
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
       invalidatesTags: ["Corp"],
     }),
     getEmployeesByCorp: builder.query({
-      query: (corpId) => `/employees/corps/${corpId}`,
+      query: (corpId) => ({
+        url: `/employees/corps/${corpId}`,
+        headers: authHeader(),
+      }),
       providesTags: ["Employee"],
     }),
     deleteCorp: builder.mutation({
       query: (id) => ({
         url: `/engineering-corps/${id}`,
         method: "DELETE",
+        headers: authHeader(),
       }),
       invalidatesTags: ["Corp"],
     }),
@@ -85,7 +97,10 @@ export const apiSlice = createApi({
       invalidatesTags: ["SiteReq"],
     }),
     getLeaveReqs: builder.query({
-      query: () => "/leave-requests",
+      query: () => ({
+        url: "/leave-requests",
+        headers: authHeader(),
+      }),
       providesTags: ["LeaveReq"],
     }),
     approveDeclineLeaveReq: builder.mutation({
@@ -94,12 +109,16 @@ export const apiSlice = createApi({
         return {
           url: `/leave-requests/${id}/${isApproved}`,
           method: "PUT",
+          headers: authHeader(),
         };
       },
       invalidatesTags: ["LeaveReq"],
     }),
     getMachines: builder.query({
-      query: () => "/machines",
+      query: () => ({
+        url: "/machines",
+        headers: authHeader(),
+      }),
       providesTags: ["Machine"],
     }),
     addMachine: builder.mutation({
@@ -108,6 +127,7 @@ export const apiSlice = createApi({
         method: "POST",
         body: payload,
         headers: {
+          ...authHeader(),
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
@@ -120,6 +140,7 @@ export const apiSlice = createApi({
           url: `/machines/${id}`,
           method: "PUT",
           body: payload,
+          headers: authHeader(),
         };
       },
       invalidatesTags: ["Machine"],
@@ -128,11 +149,15 @@ export const apiSlice = createApi({
       query: (id) => ({
         url: `/machines/${id}`,
         method: "DELETE",
+        headers: authHeader(),
       }),
       invalidatesTags: ["Machine"],
     }),
     getRentals: builder.query({
-      query: () => "/machinery-rentals",
+      query: () => ({
+        url: "/machinery-rentals",
+        headers: authHeader(),
+      }),
       providesTags: ["Rental"],
     }),
     addRental: builder.mutation({
@@ -141,19 +166,24 @@ export const apiSlice = createApi({
         method: "POST",
         body: payload,
         headers: {
+          ...authHeader(),
           "Content-type": "application/json; charset=UTF-8",
         },
       }),
       invalidatesTags: ["Rental"],
     }),
     getMachinesByRental: builder.query({
-      query: (rentalId) => `/machines/rentals/${rentalId}`,
+      query: (rentalId) => ({
+        url: `/machines/rentals/${rentalId}`,
+        headers: authHeader(),
+      }),
       providesTags: ["Machine"],
     }),
     deleteRental: builder.mutation({
       query: (id) => ({
         url: `/machinery-rentals/${id}`,
         method: "DELETE",
+        headers: authHeader(),
       }),
       invalidatesTags: ["Rental"],
     }),

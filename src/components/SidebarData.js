@@ -100,7 +100,7 @@ export const SidebarData = [
   },
   {
     title: "Supply Management",
-    path: "/supplies",
+    path: "/supplies/suppliers",
     icon: <FaIcons.FaEnvelopeOpenText />,
 
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -108,15 +108,15 @@ export const SidebarData = [
 
     subNav: [
       {
-        title: "Supply Requests",
-        path: "/supplies/supply-requests",
+        title: "Suppliers",
+        path: "/supplies/suppliers",
         icon: <IoIcons.IoIosPaper />,
       },
-      {
-        title: "Verify Supplies",
-        path: "/supplies/supply-requests",
-        icon: <IoIcons.IoIosPaper />,
-      },
+      // {
+      //   title: "Material",
+      //   path: "/supplies/supply-requests",
+      //   icon: <IoIcons.IoIosPaper />,
+      // },
     ],
   },
 ];

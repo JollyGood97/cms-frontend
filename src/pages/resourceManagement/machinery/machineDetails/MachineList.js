@@ -42,6 +42,7 @@ const MachineList = () => {
   useEffect(() => {
     if (deleteSuccess) {
       setAlertVisible(true);
+      setAlertMsgType("success");
       setAlertMsg("Successfully deleted machine.");
     }
   }, [deleteSuccess]);

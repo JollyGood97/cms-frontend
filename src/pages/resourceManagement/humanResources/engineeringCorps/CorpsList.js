@@ -38,6 +38,7 @@ const CorpsList = () => {
 
   useEffect(() => {
     if (deleteSuccess) {
+      setAlertMsgType("success");
       setAlertVisible(true);
       setAlertMsg("Successfully deleted Engineering Cooperation.");
     }

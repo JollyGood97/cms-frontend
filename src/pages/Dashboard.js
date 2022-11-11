@@ -52,7 +52,10 @@ const Dashboard = () => {
         {user &&
           (user.roles.includes("ROLE_SUPER_ADMIN") ||
             user.roles.includes("ROLE_SUPPLIER_MANAGER")) && (
-            <div className="dLink" onClick={() => navigate("/supplies")}>
+            <div
+              className="dLink"
+              onClick={() => navigate("/supplies/suppliers")}
+            >
               Supply Management
             </div>
           )}

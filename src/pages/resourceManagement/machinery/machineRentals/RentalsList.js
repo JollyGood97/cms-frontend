@@ -42,6 +42,7 @@ const RentalsList = () => {
   useEffect(() => {
     if (deleteSuccess) {
       setAlertVisible(true);
+      setAlertMsgType("success");
       setAlertMsg("Successfully deleted Engineering Cooperation.");
     }
   }, [deleteSuccess]);

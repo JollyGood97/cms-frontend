@@ -21,7 +21,7 @@ const CorpsList = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-  const [alertMsgType, setAlertMsgType] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("success");
 
   const [corps, setCorps] = useState();
   const [corp, setCorp] = useState();

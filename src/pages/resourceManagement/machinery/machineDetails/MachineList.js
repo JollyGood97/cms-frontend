@@ -23,7 +23,7 @@ const MachineList = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-  const [alertMsgType, setAlertMsgType] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("success");
 
   const [machines, setMachines] = useState();
   const [machine, setMachine] = useState();

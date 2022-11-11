@@ -6,7 +6,15 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8080",
   }),
-  tagTypes: ["Employee", "Corp", "SiteReq", "LeaveReq", "Machine", "Rental"],
+  tagTypes: [
+    "Employee",
+    "Corp",
+    "SiteReq",
+    "LeaveReq",
+    "Machine",
+    "Rental",
+    "Supplier",
+  ],
   endpoints: (builder) => ({
     getEmployees: builder.query({
       query: () => ({
@@ -207,6 +215,25 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    getSuppliers: builder.query({
+      query: () => ({
+        url: "/common/supplier",
+        headers: authHeader(),
+      }),
+      providesTags: ["Supplier"],
+    }),
+    addSupplier: builder.mutation({
+      query: (payload) => ({
+        url: "/common/supplier",
+        method: "POST",
+        body: payload,
+        headers: {
+          ...authHeader(),
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+      invalidatesTags: ["Supplier"],
+    }),
   }),
 });
 export const {
@@ -232,4 +259,6 @@ export const {
   useUpdateMachineMutation,
   useLoginMutation,
   useRegisterMutation,
+  useGetSuppliersQuery,
+  useAddSupplierMutation,
 } = apiSlice;

@@ -34,8 +34,15 @@ const style = {
 };
 
 const AddEditMachine = (props) => {
-  const { open, handleClose, mode, machine, setAlertVisible, setAlertMsg } =
-    props;
+  const {
+    open,
+    handleClose,
+    mode,
+    machine,
+    setAlertVisible,
+    setAlertMsg,
+    setAlertMsgType,
+  } = props;
   const [allocatedSiteId, setAllocatedSiteId] = useState("");
   const [type, setType] = useState("INTERNAL");
   const [companyId, setCompanyId] = useState("");
@@ -110,6 +117,7 @@ const AddEditMachine = (props) => {
             handleClose();
             resetData();
             setAlertVisible(true);
+            setAlertMsgType("success");
             setAlertMsg("Successfully added machine.");
           })
           .catch((error) => {
@@ -123,6 +131,7 @@ const AddEditMachine = (props) => {
             handleClose();
             resetData();
             setAlertVisible(true);
+            setAlertMsgType("success");
             setAlertMsg("Successfully updated machine.");
           })
           .catch((error) => {
@@ -335,10 +344,6 @@ const AddEditMachine = (props) => {
           </Box>
         </Box>
       </Modal>
-      {/* <h1>Employees</h1>
-        <div className="addEmployeeBtn">
-          <Button variant="contained" onClick={() => setOpen(true)}>Add Employee</Button>
-        </div> */}
     </div>
   );
 };

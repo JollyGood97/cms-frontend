@@ -166,6 +166,7 @@ const EmployeeList = () => {
         </ThemeProvider>
       </div>
       <AddEmployee
+        setAlertMsgType={setAlertMsgType}
         employee={employee}
         open={open}
         mode={mode}

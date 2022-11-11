@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import DatePicker from "react-datepicker";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+
 import Box from "@mui/material/Box";
 
 import "./add-contract.css";
@@ -140,29 +143,36 @@ const AddContract = (props) => {
       <Box sx={style}>
         <div className="addContract">
           <div className="mainContainer">
-            <form style={{ display: "flex", flexDirection: "column" }}>
+            <form style={{ width: "inherit" }}>
               <h1> Add new contract </h1>
-              <div>
-                <label> Customer Name: </label>
-                <input
-                  type="text"
-                  placeholder="Enter name"
-                  name="customerName"
-                  value={contractData.customerName}
-                  onChange={handleContractChanges}
-                />
-              </div>
-              <div>
-                <label> Customer contact number: </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="contact number"
-                  name="contactNumber"
-                  value={contractData.contactNumber}
-                  onChange={handleContractChanges}
-                />
-              </div>
+              <Grid container spacing={2} sx={{ mt: 3 }}>
+                <Grid item xs={6}>
+                  <div>
+                    <label> Customer Name: </label>
+                    <input
+                      type="text"
+                      placeholder="Enter name"
+                      name="customerName"
+                      value={contractData.customerName}
+                      onChange={handleContractChanges}
+                    />
+                  </div>
+                </Grid>
+                <Grid item xs={6}>
+                  <div>
+                    <label> Customer contact number: </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="contact number"
+                      name="contactNumber"
+                      value={contractData.contactNumber}
+                      onChange={handleContractChanges}
+                    />
+                  </div>
+                </Grid>
+              </Grid>
+
               <div>
                 <label> Address: </label>
                 <textarea
@@ -202,16 +212,31 @@ const AddContract = (props) => {
               )}
               <div>
                 <label>Start date</label>
-                <DatePicker
+                <TextField
+                  id="date"
+                  type="date"
+                  value={startDate.toISOString().slice(0, 10)}
+                  size="small"
+                  sx={{ width: 220 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(event) => {
+                    setStartDate(new Date(event.target.value));
+                  }}
+                />
+                {/* <DatePicker
                   selected={startDate}
                   name="startDate"
                   onChange={(date) => {
                     setStartDate(date);
                   }}
                   dateFormat="dd/MM/yyyy"
-                />
+                /> */}
               </div>
-              <button onClick={addContractData}> Submit </button>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <button onClick={addContractData}> Submit </button>
+              </div>
             </form>
           </div>
         </div>

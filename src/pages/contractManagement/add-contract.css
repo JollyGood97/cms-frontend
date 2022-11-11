@@ -1,25 +1,25 @@
 .mainContainer {
-    width: 50%;
-    margin: 80px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
   }
   
   .mainContainer label {
     text-align: left;
     display: block;
     font-size: 20px;
+
   }
-  .mainContainer input,
+  .mainContainer input[type=text],
   .mainContainer textarea,
   .mainContainer select {
     width: 100%;
-    padding: 6px 10px;
+    padding: 12px 10px;
     margin: 10px 0;
     border: 1px solid #ddd;
     box-sizing: border-box;
     display: block;
+    border-radius: 5px;
   }
   .mainContainer button {
     margin-top: 20px;
@@ -29,6 +29,8 @@
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
+    width: 200px;
+    height: 40px;
   }
   
   form {
@@ -45,5 +47,5 @@
   }
   
   form div {
-    margin-top: 10px;
+    margin-top: 20px;
   }

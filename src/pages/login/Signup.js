@@ -121,11 +121,11 @@ const Signup = (props) => {
                 setRole(event.target.value);
               }}
             >
-              <MenuItem value="user">User</MenuItem>
               <MenuItem value="super_admin">Super Admin</MenuItem>
               <MenuItem value="contract_admin">Contract Manager</MenuItem>
               <MenuItem value="hr_admin">HR Manager</MenuItem>
               <MenuItem value="machinery_admin">Machinery Manager</MenuItem>
+              <MenuItem value="supplier_admin">Supplier Manager</MenuItem>
             </Select>
           </Grid>
         </Grid>

@@ -107,6 +107,7 @@ padding: 5px;
 .dashboardWrapper{
     padding: 30px;
     display: flex;
+    justify-content: center;
 }
 .dLink{
     font-size: 18px;

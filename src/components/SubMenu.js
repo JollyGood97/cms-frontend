@@ -41,11 +41,19 @@ const SubMenu = ({ item }) => {
           }
         }
       case "Supply Management":
-        if (currentUser && currentUser.roles.includes("ROLE_SUPER_ADMIN")) {
+        if (
+          currentUser &&
+          currentUser.roles.includes("ROLE_SUPPLIER_MANAGER")
+        ) {
           return true;
         } else {
-          return false;
+          if (currentUser && currentUser.roles.includes("ROLE_SUPER_ADMIN")) {
+            return true;
+          } else {
+            return false;
+          }
         }
+
       case "Resource Management":
         if (
           currentUser &&

@@ -8,17 +8,11 @@ import AddCorp from "./AddCorp";
 import tableIcons from "src/components/MaterialTableIcons";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Alert from "@mui/material/Alert";
-
-import {
-  useAddEmployeeMutation,
-  useGetEmployeesQuery,
-  useDeleteEmployeeMutation,
-  useGetCorpsQuery,
-  useDeleteCorpMutation,
-} from "src/api/apiSlice";
+import { useGetCorpsQuery, useDeleteCorpMutation } from "src/api/apiSlice";
 import ConfirmDialog from "src/components/ConfirmDialog";
 import ViewCorp from "./ViewCorp";
-
+import { getCurrentUser } from "src/util/Util";
+import EventBus from "src/EventBus";
 const defaultMaterialTheme = createTheme();
 
 const CorpsList = () => {
@@ -27,12 +21,13 @@ const CorpsList = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("");
 
   const [corps, setCorps] = useState();
   const [corp, setCorp] = useState();
   const [mode, setMode] = useState("add");
 
-  const { data, isLoading } = useGetCorpsQuery({
+  const { data, error } = useGetCorpsQuery({
     refetchOnMountOrArgChange: true,
   });
   const [deleteCorp, { isSuccess: deleteSuccess }] = useDeleteCorpMutation();
@@ -47,6 +42,27 @@ const CorpsList = () => {
       setAlertMsg("Successfully deleted Engineering Cooperation.");
     }
   }, [deleteSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      setAlertMsgType("error");
+      setAlertVisible(true);
+      setAlertMsg(
+        "Sorry, you do not have permission to view data in this page!"
+      );
+      const user = getCurrentUser();
+
+      if (
+        user &&
+        error.response &&
+        error.response.status === 401 &&
+        (user.roles.includes("ROLE_SUPER_ADMIN") ||
+          user.roles.includes("ROLE_HR_MANAGER"))
+      ) {
+        EventBus.dispatch("logout");
+      }
+    }
+  }, [error]);
 
   const resetData = () => {
     setCorp({
@@ -66,6 +82,7 @@ const CorpsList = () => {
         <h1>Manage Engineering Corps</h1>
         <div className="addEmployeeBtn">
           <Button
+            disabled={!!error}
             variant="contained"
             onClick={() => {
               setMode("add");
@@ -78,7 +95,7 @@ const CorpsList = () => {
         </div>
       </div>
       {alertVisible && (
-        <Alert severity="success" onClose={() => setAlertVisible(false)}>
+        <Alert severity={alertMsgType} onClose={() => setAlertVisible(false)}>
           {alertMsg}
         </Alert>
       )}

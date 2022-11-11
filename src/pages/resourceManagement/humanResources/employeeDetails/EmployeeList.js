@@ -103,6 +103,7 @@ const EmployeeList = () => {
         <h1>Manage Employees</h1>
         <div className="addEmployeeBtn">
           <Button
+            disabled={!!error}
             variant="contained"
             onClick={() => {
               setMode("add");

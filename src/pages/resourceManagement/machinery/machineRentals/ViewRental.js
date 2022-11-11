@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Modal from "@mui/material/Modal";
-import { Box, Typography, Grid, TextField, Button } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
 
 import { useGetMachinesByRentalQuery } from "src/api/apiSlice";
 import "src/pages/resourceManagement/Machine.css";
@@ -20,10 +20,9 @@ const style = {
 
 const ViewRental = (props) => {
   const { open, handleClose, rental } = props;
-  const { data, isLoading } = useGetMachinesByRentalQuery(rental && rental.id);
+  const { data } = useGetMachinesByRentalQuery(rental && rental.id);
 
   const categories = data && data.map((machine) => machine.name);
-  console.log(categories);
   const counts =
     categories &&
     categories.reduce((map, val) => {

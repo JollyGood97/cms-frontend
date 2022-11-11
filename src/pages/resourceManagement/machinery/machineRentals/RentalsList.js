@@ -11,6 +11,8 @@ import Alert from "@mui/material/Alert";
 import { useGetRentalsQuery, useDeleteRentalMutation } from "src/api/apiSlice";
 import ConfirmDialog from "src/components/ConfirmDialog";
 import ViewRental from "./ViewRental";
+import { getCurrentUser } from "src/util/Util";
+import EventBus from "src/EventBus";
 import "src/pages/resourceManagement/Machine.css";
 
 const defaultMaterialTheme = createTheme();
@@ -21,12 +23,13 @@ const RentalsList = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("");
 
   const [rentals, setRentals] = useState();
   const [rental, setRental] = useState();
   const [mode, setMode] = useState("add");
 
-  const { data, isLoading } = useGetRentalsQuery({
+  const { data, error } = useGetRentalsQuery({
     refetchOnMountOrArgChange: true,
   });
   const [deleteRental, { isSuccess: deleteSuccess }] =
@@ -42,6 +45,27 @@ const RentalsList = () => {
       setAlertMsg("Successfully deleted Engineering Cooperation.");
     }
   }, [deleteSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      setAlertMsgType("error");
+      setAlertVisible(true);
+      setAlertMsg(
+        "Sorry, you do not have permission to view data in this page!"
+      );
+      const user = getCurrentUser();
+
+      if (
+        user &&
+        error.response &&
+        error.response.status === 401 &&
+        (user.roles.includes("ROLE_SUPER_ADMIN") ||
+          user.roles.includes("ROLE_MACHINE_MANAGER"))
+      ) {
+        EventBus.dispatch("logout");
+      }
+    }
+  }, [error]);
 
   const resetData = () => {
     setRental({
@@ -61,6 +85,7 @@ const RentalsList = () => {
         <h1>Manage Machinery Rentals</h1>
         <div className="addEmployeeBtn">
           <Button
+            disabled={!!error}
             variant="contained"
             onClick={() => {
               setMode("add");
@@ -73,7 +98,7 @@ const RentalsList = () => {
         </div>
       </div>
       {alertVisible && (
-        <Alert severity="success" onClose={() => setAlertVisible(false)}>
+        <Alert severity={alertMsgType} onClose={() => setAlertVisible(false)}>
           {alertMsg}
         </Alert>
       )}

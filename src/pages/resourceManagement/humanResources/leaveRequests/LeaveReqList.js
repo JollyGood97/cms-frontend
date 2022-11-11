@@ -1,21 +1,57 @@
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, TextField, Button } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 
 import "src/pages/resourceManagement/humanResources/employeeDetails/EmployeeList.css";
 import {
   useApproveDeclineLeaveReqMutation,
   useGetLeaveReqsQuery,
 } from "src/api/apiSlice";
+import Alert from "@mui/material/Alert";
+import { getCurrentUser } from "src/util/Util";
+import EventBus from "src/EventBus";
 
 const LeaveReqList = () => {
-  const { data, isLoading } = useGetLeaveReqsQuery();
+  const { data, error } = useGetLeaveReqsQuery();
   const [approveDeclineLeaveReq] = useApproveDeclineLeaveReqMutation();
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("");
+
+  useEffect(() => {
+    if (error) {
+      setAlertMsgType("error");
+      setAlertVisible(true);
+      setAlertMsg(
+        "Sorry, you do not have permission to view data in this page!"
+      );
+      const user = getCurrentUser();
+
+      if (
+        user &&
+        error.response &&
+        error.response.status === 401 &&
+        (user.roles.includes("ROLE_SUPER_ADMIN") ||
+          user.roles.includes("ROLE_HR_MANAGER"))
+      ) {
+        EventBus.dispatch("logout");
+      }
+    }
+  }, [error]);
 
   return (
     <div className="reports">
       <div className="employeeListWrapper">
         <h1>Leave Requests</h1>
       </div>
+      {alertVisible && (
+        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+          <Alert severity={alertMsgType} onClose={() => setAlertVisible(false)}>
+            {alertMsg}
+          </Alert>
+        </div>
+      )}
       {data &&
         data.map((req) => (
           <div className="leaveReqWrapper">

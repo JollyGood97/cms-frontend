@@ -18,12 +18,12 @@ import SupplyRequests from "./pages/supplyManagement/SupplyRequests";
 import EventBus from "./EventBus";
 
 function App() {
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const logOut = useCallback(() => {
     localStorage.removeItem("user");
-    navigate("/login");
-  }, [navigate]);
+    // navigate("/login");
+  }, []);
 
   useEffect(() => {
     EventBus.on("logout", () => {

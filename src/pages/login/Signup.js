@@ -4,51 +4,57 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
+import Modal from "@mui/material/Modal";
 
 import "../../App.css";
 import Button from "@mui/material/Button";
-import { useLoginMutation } from "src/api/apiSlice";
+import { useLoginMutation, useRegisterMutation } from "src/api/apiSlice";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
-const Login = () => {
+const style = {
+  position: "absolute",
+  top: "54%",
+  left: "61%",
+  transform: "translate(-50%, -50%)",
+  width: "74%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  flexGrow: 1,
+};
+
+const Signup = (props) => {
   let navigate = useNavigate();
+  const { open, handleClose, alert, setAlert } = props;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState(false);
+  const [role, setRole] = useState("user");
 
-  const [login, response] = useLoginMutation();
+  const [register, response] = useRegisterMutation();
 
-  const loginUser = () => {
-    login({ username, password })
+  const registerUser = () => {
+    register({ username, password, roles: [role] })
       .unwrap()
       .then((userDetails) => {
-        if (userDetails.token) {
-          localStorage.setItem("user", JSON.stringify(userDetails));
-          navigate("/");
-          window.location.reload();
-        }
+        handleClose();
+        setAlert(true);
       })
       .catch((error) => {
-        setAlert(true);
+        // setAlert(true);
       });
   };
-
   return (
-    <>
-      <Box className="loginBox">
-        <h2>CMS - LOGIN</h2>
-        {alert && (
-          <Alert
-            sx={{ marginTop: "10px" }}
-            severity="error"
-            onClose={() => {
-              setAlert(false);
-            }}
-          >
-            Invalid Credentials! Please try again.
-          </Alert>
-        )}
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <h2>Add User Account</h2>
         <Grid container>
           <Grid xs={12}>
             <Box sx={{ marginTop: "30px", marginBottom: "20px" }}>
@@ -100,27 +106,61 @@ const Login = () => {
               }}
             />
           </Grid>
+          <Grid xs={12}>
+            {" "}
+            <Box sx={{ marginTop: "30px", marginBottom: "20px" }}>
+              User Role:
+            </Box>
+          </Grid>
+          <Grid>
+            <Select
+              size="small"
+              id="demo-select-small"
+              value={role}
+              onChange={(event) => {
+                setRole(event.target.value);
+              }}
+            >
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="super_admin">Super Admin</MenuItem>
+              <MenuItem value="contract_admin">Contract Manager</MenuItem>
+              <MenuItem value="hr_admin">HR Manager</MenuItem>
+              <MenuItem value="machinery_admin">Machinery Manager</MenuItem>
+            </Select>
+          </Grid>
         </Grid>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginTop: "50px" }}
+        >
           <Button
-            disabled={username === "" || password === ""}
             variant="outlined"
-            onClick={loginUser}
+            onClick={() => {
+              handleClose();
+            }}
             sx={{
-              color: "black",
-              marginTop: "50px",
-              backgroundColor: "cyan",
+              border: "1px solid",
+              borderColor: "darkBlue",
+              color: "darkBlue",
               marginRight: "20px",
               width: "160px",
-              "&:hover": { backgroundColor: "cyan" },
             }}
           >
-            Login
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "darkBlue",
+              width: "160px",
+            }}
+            onClick={registerUser}
+          >
+            Submit
           </Button>
         </Box>
       </Box>
-    </>
+    </Modal>
   );
 };
 
-export default Login;
+export default Signup;

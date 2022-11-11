@@ -23,12 +23,13 @@ const EmployeeList = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+  const [alertMsgType, setAlertMsgType] = useState("");
 
   const [employees, setEmployees] = useState();
   const [employee, setEmployee] = useState();
   const [mode, setMode] = useState("add");
 
-  const { data, isLoading } = useGetEmployeesQuery({
+  const { data, error } = useGetEmployeesQuery({
     refetchOnMountOrArgChange: true,
   });
   const [deleteEmployee, { isSuccess: deleteSuccess }] =
@@ -40,10 +41,21 @@ const EmployeeList = () => {
 
   useEffect(() => {
     if (deleteSuccess) {
+      setAlertMsgType("success");
       setAlertVisible(true);
       setAlertMsg("Successfully deleted employee.");
     }
   }, [deleteSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      setAlertMsgType("error");
+      setAlertVisible(true);
+      setAlertMsg(
+        "Sorry, you do not have permission to view data in this page!"
+      );
+    }
+  }, [error]);
 
   const resetData = () => {
     setEmployee({
@@ -84,9 +96,11 @@ const EmployeeList = () => {
         </div>
       </div>
       {alertVisible && (
-        <Alert severity="success" onClose={() => setAlertVisible(false)}>
-          {alertMsg}
-        </Alert>
+        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+          <Alert severity={alertMsgType} onClose={() => setAlertVisible(false)}>
+            {alertMsg}
+          </Alert>
+        </div>
       )}
       <div className="empTable">
         <ThemeProvider theme={defaultMaterialTheme}>

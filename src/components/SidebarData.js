@@ -7,7 +7,7 @@ import * as RiIcons from "react-icons/ri";
 export const SidebarData = [
   {
     title: "Dashboard",
-    path: "/dashboard",
+    path: "/",
     icon: <AiIcons.AiFillHome />,
   },
   {
@@ -100,7 +100,7 @@ export const SidebarData = [
   },
   {
     title: "Supply Management",
-    path: "/messages",
+    path: "/supplies",
     icon: <FaIcons.FaEnvelopeOpenText />,
 
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -108,13 +108,13 @@ export const SidebarData = [
 
     subNav: [
       {
-        title: "Message 1",
-        path: "/messages/message1",
+        title: "Supply Requests",
+        path: "/supplies/supply-requests",
         icon: <IoIcons.IoIosPaper />,
       },
       {
-        title: "Message 2",
-        path: "/messages/message2",
+        title: "Verify Supplies",
+        path: "/supplies/supply-requests",
         icon: <IoIcons.IoIosPaper />,
       },
     ],

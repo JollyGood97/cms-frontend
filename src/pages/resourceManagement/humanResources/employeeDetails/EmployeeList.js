@@ -54,6 +54,9 @@ const EmployeeList = () => {
       setAlertMsg(
         "Sorry, you do not have permission to view data in this page!"
       );
+      // if (error.response && error.response.status === 401) {
+      //   EventBus.dispatch("logout");
+      // }
     }
   }, [error]);
 

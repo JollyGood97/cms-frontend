@@ -4,12 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
+import { BrowserRouter } from "react-router-dom";
+
 import { apiSlice } from "src/api/apiSlice";
 
 ReactDOM.render(
   <React.StrictMode>
     <ApiProvider api={apiSlice}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ApiProvider>
   </React.StrictMode>,
   document.getElementById("root")

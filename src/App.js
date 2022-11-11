@@ -18,12 +18,12 @@ import SupplyRequests from "./pages/supplyManagement/SupplyRequests";
 import EventBus from "./EventBus";
 
 function App() {
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const logOut = useCallback(() => {
     localStorage.removeItem("user");
-    // navigate("/login");
-  }, []);
+    navigate("/login");
+  }, [navigate]);
 
   useEffect(() => {
     EventBus.on("logout", () => {
@@ -36,58 +36,44 @@ function App() {
   }, [logOut]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Outlet />}>
-          <Route path="/login" element={<Login />} />
-        </Route>
+    <Routes>
+      <Route element={<Outlet />}>
+        <Route path="/login" element={<Login />} />
+      </Route>
+      <Route
+        element={
+          <>
+            <Sidebar />
+            <Outlet />
+          </>
+        }
+      >
+        <Route path="/contract-management" element={<Contract />} />
+        <Route path="/contract-management/contracts" element={<Contract />} />
+        <Route path="/contract-management/milestones" element={<Milestone />} />
+        <Route path="/resources" element={<EmployeeList />} />
+        <Route path="/resources/human" element={<EmployeeList />} />
+        <Route path="/resources/human/employees" element={<EmployeeList />} />
+        <Route path="/resources/human/corps" element={<CorpsList />} />
         <Route
-          element={
-            <>
-              <Sidebar />
-              <Outlet />
-            </>
-          }
-        >
-          <Route path="/contract-management" element={<Contract />} />
-          <Route path="/contract-management/contracts" element={<Contract />} />
-          <Route
-            path="/contract-management/milestones"
-            element={<Milestone />}
-          />
-          <Route path="/resources" element={<EmployeeList />} />
-          <Route path="/resources/human" element={<EmployeeList />} />
-          <Route path="/resources/human/employees" element={<EmployeeList />} />
-          <Route path="/resources/human/corps" element={<CorpsList />} />
-          <Route
-            path="/resources/human/leave-requests"
-            element={<LeaveReqList />}
-          />
-          <Route
-            path="/resources/human/site-requests"
-            element={<SiteReqList />}
-          />
-          <Route
-            path="/resources/machinery/machines"
-            element={<MachineList />}
-          />
-          <Route
-            path="/resources/machinery/site-requests"
-            element={<MSiteReqList />}
-          />
-          <Route
-            path="/resources/machinery/rentals"
-            element={<RentalsList />}
-          />
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/supplies" element={<SupplyRequests />} />
-          <Route
-            path="/supplies/supply-requests"
-            element={<SupplyRequests />}
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          path="/resources/human/leave-requests"
+          element={<LeaveReqList />}
+        />
+        <Route
+          path="/resources/human/site-requests"
+          element={<SiteReqList />}
+        />
+        <Route path="/resources/machinery/machines" element={<MachineList />} />
+        <Route
+          path="/resources/machinery/site-requests"
+          element={<MSiteReqList />}
+        />
+        <Route path="/resources/machinery/rentals" element={<RentalsList />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/supplies" element={<SupplyRequests />} />
+        <Route path="/supplies/supply-requests" element={<SupplyRequests />} />
+      </Route>
+    </Routes>
   );
 }
 

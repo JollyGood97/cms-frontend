@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-// import { toast } from "react-toastify";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
-import DatePicker from "react-datepicker";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
@@ -24,7 +22,7 @@ const style = {
 };
 
 const AddContract = (props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, setAlertMsg, setAlert, setAlertType } = props;
 
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(new Date());
@@ -107,28 +105,14 @@ const AddContract = (props) => {
           startDate: "",
           budget: 0,
         });
-        // toast.success("Contract added successfully!", {
-        //   position: "top-center",
-        //   autoClose: 3000,
-        //   hideProgressBar: true,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        setAlertMsg("Contract added successfully!");
+        setAlertType("success");
+        setAlert(true);
       })
       .catch((error) => {
-        // toast.error("Error, could not add Contract!", {
-        //   position: "top-center",
-        //   autoClose: 3000,
-        //   hideProgressBar: true,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        setAlertMsg("Error! Couldn't add contract");
+        setAlertType("error");
+        setAlert(true);
       });
     navigate("/contract");
   };
@@ -225,14 +209,6 @@ const AddContract = (props) => {
                     setStartDate(new Date(event.target.value));
                   }}
                 />
-                {/* <DatePicker
-                  selected={startDate}
-                  name="startDate"
-                  onChange={(date) => {
-                    setStartDate(date);
-                  }}
-                  dateFormat="dd/MM/yyyy"
-                /> */}
               </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <button onClick={addContractData}> Submit </button>

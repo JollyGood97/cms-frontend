@@ -1,12 +1,15 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import { Link } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
+import Button from "@mui/material/Button";
 
 const Nav = styled.div`
   background: #040338;
@@ -45,13 +48,33 @@ const SidebarWrap = styled.div`
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(true);
+  let navigate = useNavigate();
 
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
-        <Nav></Nav>
+        <Nav>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              localStorage.removeItem("user");
+              navigate("/login");
+            }}
+            sx={{
+              color: "black",
+              marginLeft: "90%",
+              backgroundColor: "cyan",
+              marginRight: "20px",
+              width: "160px",
+              "&:hover": { backgroundColor: "cyan" },
+            }}
+          >
+            LOG OUT
+          </Button>
+        </Nav>
+
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <div>

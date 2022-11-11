@@ -21,11 +21,8 @@ const ConfirmDialog = (props) => {
       open={dialogVisible}
       {...other}
     >
-      <DialogTitle>Delete Employee</DialogTitle>
-      <DialogContent>
-        Are you sure you want to delete this Employee? This action cannot be
-        undone.
-      </DialogContent>
+      <DialogTitle sx={{ color: "red" }}>{title}</DialogTitle>
+      <DialogContent>{content}</DialogContent>
       <DialogActions>
         <Button autoFocus onClick={() => setDialogVisible(false)}>
           Cancel

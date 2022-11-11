@@ -1,87 +1,64 @@
 // @ts-nocheck
-import "./EmployeeList.css";
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
 import { ThemeProvider, createTheme } from "@mui/material";
-import AddEmployee from "./AddEmployee";
+import AddRental from "./AddRental";
 import tableIcons from "src/components/MaterialTableIcons";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Alert from "@mui/material/Alert";
 
-import {
-  useAddEmployeeMutation,
-  useGetEmployeesQuery,
-  useDeleteEmployeeMutation,
-} from "src/api/apiSlice";
+import { useGetRentalsQuery, useDeleteRentalMutation } from "src/api/apiSlice";
 import ConfirmDialog from "src/components/ConfirmDialog";
+import ViewRental from "./ViewRental";
+import "src/pages/resourceManagement/Machine.css";
 
 const defaultMaterialTheme = createTheme();
 
-const EmployeeList = () => {
+const RentalsList = () => {
   const [open, setOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-  const [alertMsgType, setAlertMsgType] = useState("");
 
-  const [employees, setEmployees] = useState();
-  const [employee, setEmployee] = useState();
+  const [rentals, setRentals] = useState();
+  const [rental, setRental] = useState();
   const [mode, setMode] = useState("add");
 
-  const { data, error } = useGetEmployeesQuery({
+  const { data, isLoading } = useGetRentalsQuery({
     refetchOnMountOrArgChange: true,
   });
-  const [deleteEmployee, { isSuccess: deleteSuccess }] =
-    useDeleteEmployeeMutation();
+  const [deleteRental, { isSuccess: deleteSuccess }] =
+    useDeleteRentalMutation();
 
   useEffect(() => {
-    data && setEmployees(JSON.parse(JSON.stringify(data)));
+    data && setRentals(JSON.parse(JSON.stringify(data)));
   }, [data]);
 
   useEffect(() => {
     if (deleteSuccess) {
-      setAlertMsgType("success");
       setAlertVisible(true);
-      setAlertMsg("Successfully deleted employee.");
+      setAlertMsg("Successfully deleted Engineering Cooperation.");
     }
   }, [deleteSuccess]);
 
-  useEffect(() => {
-    if (error) {
-      setAlertMsgType("error");
-      setAlertVisible(true);
-      setAlertMsg(
-        "Sorry, you do not have permission to view data in this page!"
-      );
-    }
-  }, [error]);
-
   const resetData = () => {
-    setEmployee({
-      allocatedSiteId: "",
-      name: "",
-      type: "INTERNAL",
-      companyId: "",
-      address: "",
-      dob: new Date(),
-      designation: "",
-      empId: "",
+    setRental({
+      machineryRentalId: "",
+      companyName: "",
     });
   };
 
   const columns = [
-    { title: "E_ID", field: "empId" },
-    { title: "Name", field: "name" },
-    { title: "Type", field: "type" },
-    { title: "Site", field: "allocatedSiteId" },
-    { title: "Designation", field: "designation" },
+    { title: "Machinery_Rental_ID", field: "machineryRentalId" },
+    { title: "Company", field: "companyName" },
   ];
 
   return (
     <div className="reports">
       <div className="employeeListWrapper">
-        <h1>Manage Employees</h1>
+        <h1>Manage Machinery Rentals</h1>
         <div className="addEmployeeBtn">
           <Button
             variant="contained"
@@ -91,24 +68,22 @@ const EmployeeList = () => {
               setOpen(true);
             }}
           >
-            Add Employee
+            Add Machinery Rental
           </Button>
         </div>
       </div>
       {alertVisible && (
-        <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-          <Alert severity={alertMsgType} onClose={() => setAlertVisible(false)}>
-            {alertMsg}
-          </Alert>
-        </div>
+        <Alert severity="success" onClose={() => setAlertVisible(false)}>
+          {alertMsg}
+        </Alert>
       )}
       <div className="empTable">
         <ThemeProvider theme={defaultMaterialTheme}>
-          {employees && (
+          {rentals && (
             <MaterialTable
-              title="Employees List"
+              title="Machinery Rentals List"
               columns={columns}
-              data={employees}
+              data={rentals}
               icons={tableIcons}
               options={{
                 actionsColumnIndex: -1,
@@ -119,8 +94,8 @@ const EmployeeList = () => {
                   tooltip: "View",
                   onClick: (event, rowData) => {
                     setMode("view");
-                    setEmployee(rowData);
-                    setOpen(true);
+                    setRental(rowData);
+                    setViewOpen(true);
                   },
                 },
                 {
@@ -128,7 +103,7 @@ const EmployeeList = () => {
                   tooltip: "Edit",
                   onClick: (event, rowData) => {
                     setMode("edit");
-                    setEmployee(rowData);
+                    setRental(rowData);
                     setOpen(true);
                   },
                 },
@@ -136,7 +111,7 @@ const EmployeeList = () => {
                   icon: tableIcons.Delete,
                   tooltip: "Delete",
                   onClick: (event, rowData) => {
-                    setEmployee(rowData);
+                    setRental(rowData);
                     setDialogVisible(true);
                   },
                 },
@@ -145,25 +120,30 @@ const EmployeeList = () => {
           )}
         </ThemeProvider>
       </div>
-      <AddEmployee
-        employee={employee}
+      <AddRental
+        rental={rental}
         open={open}
         mode={mode}
         setAlertVisible={setAlertVisible}
         setAlertMsg={setAlertMsg}
         handleClose={() => setOpen(false)}
       />
+      <ViewRental
+        rental={rental}
+        open={viewOpen}
+        handleClose={() => setViewOpen(false)}
+      />
       <ConfirmDialog
-        content="Are you sure you want to delete this Employee? This action cannot be undone."
-        title="Delete Employee"
+        content="Are you sure you want to delete this Machinery Rental? All the machines belonging to this rental will also be deleted!"
+        title="Delete Machinery Rental"
         dialogVisible={dialogVisible}
         setDialogVisible={setDialogVisible}
         onConfirm={() => {
-          deleteEmployee(employee.id);
+          deleteRental(rental.id);
         }}
       />
     </div>
   );
 };
 
-export default EmployeeList;
+export default RentalsList;

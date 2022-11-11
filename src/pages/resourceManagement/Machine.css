@@ -103,3 +103,34 @@ padding: 5px;
     background-color:#ff7657;
 
 }
+
+.dashboardWrapper{
+    padding: 30px;
+    display: flex;
+}
+.dLink{
+    font-size: 18px;
+    font-weight: bold;
+    justify-content: space-between;
+    padding: 20px;
+    /* border: 5px solid darkblue; */
+    border-radius: 20px;
+    color: darkblue;
+    background-color: #e8f2ff;
+    width: 182px;
+    height: 100px;
+    text-align: center;
+    border-radius: 20px;
+    -webkit-box-shadow: -5px 1px 13px 6px rgba(175,199,204,1);
+    -moz-box-shadow: -5px 1px 13px 6px rgba(175,199,204,1);
+    box-shadow: -5px 1px 13px 6px rgba(175,199,204,1);
+    margin: 30px;
+    cursor:pointer;
+    pointer-events: auto;
+}
+
+.dLink:hover{
+    background-color:cyan;
+    color: darkblue;
+
+}

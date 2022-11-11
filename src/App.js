@@ -15,13 +15,14 @@ import RentalsList from "./pages/resourceManagement/machinery/machineRentals/Ren
 import Login from "./pages/login/Login";
 import Contract from "./pages/contractManagement/Contract";
 import Milestone from "./pages/contractManagement/Milestone";
+import SupplyRequests from "./pages/supplyManagement/SupplyRequests";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Outlet />}>
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
         </Route>
         <Route
           element={
@@ -62,7 +63,12 @@ function App() {
             path="/resources/machinery/rentals"
             element={<RentalsList />}
           />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/supplies" element={<SupplyRequests />} />
+          <Route
+            path="/supplies/supply-requests"
+            element={<SupplyRequests />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

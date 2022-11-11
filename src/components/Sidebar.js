@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import { Link } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
@@ -46,6 +48,7 @@ const SidebarWrap = styled.div`
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(true);
+  let navigate = useNavigate();
 
   const showSidebar = () => setSidebar(!sidebar);
 
@@ -57,6 +60,7 @@ const Sidebar = () => {
             variant="outlined"
             onClick={() => {
               localStorage.removeItem("user");
+              navigate("/login");
             }}
             sx={{
               color: "black",

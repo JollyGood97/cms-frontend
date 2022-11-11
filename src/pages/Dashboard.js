@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Signup from "./login/Signup";
+import { getCurrentUser } from "src/util/Util";
 
 const Dashboard = () => {
   let navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [alert, setAlert] = useState(false);
+
+  const user = getCurrentUser();
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="home">

@@ -66,8 +66,6 @@ const SubMenu = ({ item }) => {
 
     switch (title) {
       case "Contract Management":
-        console.log(currentUser);
-
         if (
           currentUser &&
           currentUser.roles.includes("ROLE_CONTRACT_MANAGER")
@@ -87,7 +85,11 @@ const SubMenu = ({ item }) => {
           return false;
         }
       case "Resource Management":
-        if (currentUser && currentUser.roles.includes("ROLE_HR_MANAGER")) {
+        if (
+          currentUser &&
+          (currentUser.roles.includes("ROLE_HR_MANAGER") ||
+            currentUser.roles.includes("ROLE_MACHINE_MANAGER"))
+        ) {
           return true;
         } else {
           if (currentUser && currentUser.roles.includes("ROLE_SUPER_ADMIN")) {
@@ -98,7 +100,6 @@ const SubMenu = ({ item }) => {
         }
       default:
         return true;
-      // code block
     }
   };
 
@@ -110,7 +111,6 @@ const SubMenu = ({ item }) => {
           onClick={item.subNav && showSubnav}
           className={({ isActive }) => (isActive ? "activeLinks" : "links")}
         >
-          {console.log(item.title)}
           <div>
             {item.icon}
             <SidebarLabel>{item.title}</SidebarLabel>

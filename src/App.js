@@ -3,7 +3,6 @@ import React from "react";
 import { Outlet } from "react-router";
 import Sidebar from "./components/Sidebar";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Overview from "./pages/Overview";
 import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/resourceManagement/humanResources/employeeDetails/EmployeeList";
 import CorpsList from "./pages/resourceManagement/humanResources/engineeringCorps/CorpsList";
@@ -38,7 +37,6 @@ function App() {
             path="/contract-management/milestones"
             element={<Milestone />}
           />
-
           <Route path="/resources" element={<EmployeeList />} />
           <Route path="/resources/human" element={<EmployeeList />} />
           <Route path="/resources/human/employees" element={<EmployeeList />} />

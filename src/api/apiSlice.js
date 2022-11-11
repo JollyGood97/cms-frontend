@@ -11,7 +11,7 @@ export const apiSlice = createApi({
     getEmployees: builder.query({
       query: () => ({
         url: "/employees",
-        headers: authHeader(), //test
+        headers: authHeader(),
         providesTags: ["Employee"],
       }),
     }),
